@@ -52,6 +52,9 @@ class SlidingUpPanel extends StatefulWidget {
   /// The height of the sliding panel when fully open.
   final double maxHeight;
 
+  /// The height of the sliding panel when fully open.
+  final double maxWidth;
+
   /// A border to draw around the sliding panel sheet.
   final Border border;
 
@@ -149,6 +152,7 @@ class SlidingUpPanel extends StatefulWidget {
     this.collapsed,
     this.minHeight = 100.0,
     this.maxHeight = 500.0,
+    this.maxWidth,
     this.border,
     this.borderRadius,
     this.boxShadow = const <BoxShadow>[
@@ -193,10 +197,14 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
 
   bool _isPanelVisible = true;
 
+  double get maxWidth {
+    return widget.maxWidth ?? MediaQuery.of(context).size.width;
+  }
+  
   @override
   void initState(){
     super.initState();
-
+    
     _ac = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -248,7 +256,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
           top: widget.parallaxEnabled ? _getParallax() : 0.0,
           child: Container(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            width: maxWidth,
             child: widget.body,
           ),
         ) : Container(),
@@ -261,7 +269,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
             opacity: Tween(begin: 0.0, end: widget.backdropOpacity).animate(_ac),
             child: Container(
               height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              width: maxWidth,
 
               //set color to null so that touch events pass through
               //to the body when the panel is closed, otherwise,
@@ -291,7 +299,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                 Positioned(
                   top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
                   bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
-                  width:  MediaQuery.of(context).size.width -
+                  width:  maxWidth -
                           (widget.margin != null ? widget.margin.horizontal : 0) -
                           (widget.padding != null ? widget.padding.horizontal : 0),
                   child: Container(
@@ -306,7 +314,7 @@ class _SlidingUpPanelState extends State<SlidingUpPanel> with SingleTickerProvid
                 Positioned(
                   top: widget.slideDirection == SlideDirection.UP ? 0.0 : null,
                   bottom: widget.slideDirection == SlideDirection.DOWN ? 0.0 : null,
-                  width:  MediaQuery.of(context).size.width -
+                  width:  maxWidth -
                           (widget.margin != null ? widget.margin.horizontal : 0) -
                           (widget.padding != null ? widget.padding.horizontal : 0),
                   child: Container(
